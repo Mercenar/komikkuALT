@@ -5,7 +5,7 @@
     android:viewportWidth="432"
     android:viewportHeight="432">
   <path
-      android:fillColor="#FFFFFFFF"
+      android:fillColor="#000000"
       android:pathData="
       M149.744812,249.805115
 C146.415924,233.283417 151.226395,219.160568 160.309265,206.097183
@@ -39,7 +39,7 @@ C213.798431,277.108459 235.377686,275.951569 257.856995,274.190125
   z"
       tools:ignore="VectorPath" />
   <path
-      android:fillColor="#FFFFFFFF"
+      android:fillColor="#000000"
       android:pathData="
       M200.015335,146.732513
 C220.266708,144.746185 240.029404,144.895386 259.614868,148.728607
