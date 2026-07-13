@@ -40,7 +40,7 @@ dependencyResolutionManagement {
 
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
-rootProject.name = "Komikku ALT"
+rootProject.name = "KomikkuALT"
 include(":app")
 include(":core-metadata")
 include(":core:archive")
