@@ -185,12 +185,11 @@ jobs:
         id: get_sha
         run: |
           set -e
-          suffix=$([ "${{ env.HAS_SIGNING }}" = "true" ] && echo "-signed" || echo "-unsigned")
-          mv app/build/outputs/apk/${{ needs.prepare-build.outputs.ARTIFACTS_PREFIX }}-universal-preview${suffix}.apk Komikku-${{ needs.prepare-build.outputs.TAG_NAME }}.apk
-          mv app/build/outputs/apk/${{ needs.prepare-build.outputs.ARTIFACTS_PREFIX }}-arm64-v8a-preview${suffix}.apk Komikku-arm64-v8a-${{ needs.prepare-build.outputs.TAG_NAME }}.apk
-          mv app/build/outputs/apk/${{ needs.prepare-build.outputs.ARTIFACTS_PREFIX }}-armeabi-v7a-preview${suffix}.apk Komikku-armeabi-v7a-${{ needs.prepare-build.outputs.TAG_NAME }}.apk
-          mv app/build/outputs/apk/${{ needs.prepare-build.outputs.ARTIFACTS_PREFIX }}-x86-preview${suffix}.apk Komikku-x86-${{ needs.prepare-build.outputs.TAG_NAME }}.apk
-          mv app/build/outputs/apk/${{ needs.prepare-build.outputs.ARTIFACTS_PREFIX }}-x86_64-preview${suffix}.apk Komikku-x86_64-${{ needs.prepare-build.outputs.TAG_NAME }}.apk
+          mv app/build/outputs/apk/${{ needs.prepare-build.outputs.ARTIFACTS_PREFIX }}-universal-preview-signed.apk Komikku-${{ needs.prepare-build.outputs.TAG_NAME }}.apk
+          mv app/build/outputs/apk/${{ needs.prepare-build.outputs.ARTIFACTS_PREFIX }}-arm64-v8a-preview-signed.apk Komikku-arm64-v8a-${{ needs.prepare-build.outputs.TAG_NAME }}.apk
+          mv app/build/outputs/apk/${{ needs.prepare-build.outputs.ARTIFACTS_PREFIX }}-armeabi-v7a-preview-signed.apk Komikku-armeabi-v7a-${{ needs.prepare-build.outputs.TAG_NAME }}.apk
+          mv app/build/outputs/apk/${{ needs.prepare-build.outputs.ARTIFACTS_PREFIX }}-x86-preview-signed.apk Komikku-x86-${{ needs.prepare-build.outputs.TAG_NAME }}.apk
+          mv app/build/outputs/apk/${{ needs.prepare-build.outputs.ARTIFACTS_PREFIX }}-x86_64-preview-signed.apk Komikku-x86_64-${{ needs.prepare-build.outputs.TAG_NAME }}.apk
 
       - name: Create release
         uses: softprops/action-gh-release@718ea10b132b3b2eba29c1007bb80653f286566b # v3.0.1

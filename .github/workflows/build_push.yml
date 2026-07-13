@@ -95,16 +95,9 @@ jobs:
           echo "VERSION_TAG=$version_tag" >> $GITHUB_OUTPUT
           echo "COMMIT_COUNT=$commit_count" >> $GITHUB_OUTPUT
 
-      - name: Rename apk (signed)
-        if: env.HAS_SIGNING == 'true'
+      - name: Rename apk
         run: |
           mv app/build/outputs/apk/preview/app-universal-preview-signed.apk \
-            Komikku-${{ steps.apk_vars.outputs.VERSION_TAG }}-r${{ steps.apk_vars.outputs.COMMIT_COUNT }}.apk
-
-      - name: Rename apk (unsigned)
-        if: env.HAS_SIGNING != 'true'
-        run: |
-          mv app/build/outputs/apk/preview/app-universal-preview-unsigned.apk \
             Komikku-${{ steps.apk_vars.outputs.VERSION_TAG }}-r${{ steps.apk_vars.outputs.COMMIT_COUNT }}.apk
 
       - name: Upload APK

@@ -171,7 +171,7 @@ jobs:
         id: get_sha
         run: |
           set -e
-          suffix=$([ "${{ env.HAS_SIGNING }}" = "true" ] && echo "-signed" || echo "-unsigned")
+          suffix=$([ "${{ env.HAS_SIGNING }}" = "true" ] && echo "-signed" || echo "")
           mv app/build/outputs/apk/release/app-universal-release-unsigned${suffix}.apk Komikku-${{ needs.prepare-build.outputs.VERSION_TAG }}.apk
           mv app/build/outputs/apk/release/app-arm64-v8a-release-unsigned${suffix}.apk Komikku-arm64-v8a-${{ needs.prepare-build.outputs.VERSION_TAG }}.apk
           mv app/build/outputs/apk/release/app-armeabi-v7a-release-unsigned${suffix}.apk Komikku-armeabi-v7a-${{ needs.prepare-build.outputs.VERSION_TAG }}.apk
