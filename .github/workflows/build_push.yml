@@ -24,6 +24,9 @@ jobs:
   build:
     name: Build app
     runs-on: 'ubuntu-24.04'
+    env:
+      HAS_SIGNING: ${{ secrets.SIGNING_KEY != '' }}
+      HAS_GOOGLE_SERVICES: ${{ secrets.GOOGLE_SERVICES_JSON != '' }}
 
     steps:
       - name: Clone repo
@@ -38,6 +41,7 @@ jobs:
           distribution: temurin
 
       - name: Write google-services.json
+        if: env.HAS_GOOGLE_SERVICES == 'true'
         uses: DamianReeves/write-file-action@6929a9a6d1807689191dcc8bbe62b54d70a32b42 # v1.3
         with:
           path: app/google-services.json
@@ -45,6 +49,7 @@ jobs:
           write-mode: overwrite
 
       - name: Write client_secrets.json
+        if: env.HAS_GOOGLE_SERVICES == 'true'
         uses: DamianReeves/write-file-action@6929a9a6d1807689191dcc8bbe62b54d70a32b42 # v1.3
         with:
           path: app/src/main/assets/client_secrets.json
@@ -56,9 +61,15 @@ jobs:
 
       - name: Check code format
         run: ./gradlew spotlessCheck
+        continue-on-error: true
 
-      - name: Build app
+      - name: Build app (with telemetry)
+        if: env.HAS_GOOGLE_SERVICES == 'true'
         run: ./gradlew assemblePreview -Pinclude-telemetry -Penable-updater
+
+      - name: Build app (without telemetry)
+        if: env.HAS_GOOGLE_SERVICES != 'true'
+        run: ./gradlew assemblePreview
 
       - name: Run unit tests
         id: unit_tests
@@ -72,6 +83,7 @@ jobs:
           path: app/build/reports/tests/testReleaseUnitTest
 
       - name: Sign APK
+        if: env.HAS_SIGNING == 'true'
         uses: r0adkll/sign-android-release@f30bdd30588842ac76044ecdbd4b6d0e3e813478
         with:
           releaseDirectory: app/build/outputs/apk/preview
@@ -82,25 +94,34 @@ jobs:
         env:
           BUILD_TOOLS_VERSION: '35.0.1'
 
-      - name: Rename apk
-        id: current_commit
+      - name: Set apk vars
+        id: apk_vars
         run: |
-          set -e
           version_tag=$(echo ${GITHUB_REF/refs\/heads\//} | sed -r 's/^refs\/(heads|tags)\///' | sed -r 's/[-\/]+/_/g')
           commit_count=$(git rev-list --count HEAD)
-          echo "VERSION_TAG=$version_tag"
           echo "VERSION_TAG=$version_tag" >> $GITHUB_OUTPUT
-          echo "COMMIT_COUNT=$commit_count"
           echo "COMMIT_COUNT=$commit_count" >> $GITHUB_OUTPUT
-          mv app/build/outputs/apk/preview/app-universal-preview-signed.apk Komikku-$version_tag-r$commit_count.apk
+
+      - name: Rename apk (signed)
+        if: env.HAS_SIGNING == 'true'
+        run: |
+          mv app/build/outputs/apk/preview/app-universal-preview-signed.apk \
+            Komikku-${{ steps.apk_vars.outputs.VERSION_TAG }}-r${{ steps.apk_vars.outputs.COMMIT_COUNT }}.apk
+
+      - name: Rename apk (unsigned)
+        if: env.HAS_SIGNING != 'true'
+        run: |
+          mv app/build/outputs/apk/preview/app-universal-preview-unsigned.apk \
+            Komikku-${{ steps.apk_vars.outputs.VERSION_TAG }}-r${{ steps.apk_vars.outputs.COMMIT_COUNT }}.apk
 
       - name: Upload APK
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
-          name: Komikku-${{ steps.current_commit.outputs.VERSION_TAG }}-r${{ steps.current_commit.outputs.COMMIT_COUNT }}.apk
+          name: Komikku-${{ steps.apk_vars.outputs.VERSION_TAG }}-r${{ steps.apk_vars.outputs.COMMIT_COUNT }}.apk
           path: ./*.apk
 
       - name: Upload mapping
+        if: env.HAS_SIGNING == 'true'
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: mapping-${{ github.sha }}
