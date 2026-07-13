@@ -2,7 +2,6 @@ buildscript {
     dependencies {
         classpath(libs.android.shortcut.gradle)
         classpath(sylibs.gradleversionsx)
-        classpath(libs.r8)
     }
 }
 
