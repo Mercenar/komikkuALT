@@ -106,7 +106,7 @@ jobs:
             mv app/build/outputs/apk/preview/app-universal-preview-signed.apk \
               Komikku-${{ steps.apk_vars.outputs.VERSION_TAG }}-r${{ steps.apk_vars.outputs.COMMIT_COUNT }}.apk
           else
-            mv app/build/outputs/apk/preview/app-universal-preview-unsigned.apk \
+            mv app/build/outputs/apk/preview/app-universal-preview.apk \
               Komikku-${{ steps.apk_vars.outputs.VERSION_TAG }}-r${{ steps.apk_vars.outputs.COMMIT_COUNT }}.apk
           fi
 
