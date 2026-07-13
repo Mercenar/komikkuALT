@@ -1,15 +1,8 @@
 name: CI
 on:
-  push:
-    branches:
-      # - develop
-      - master
-    paths:
-      - '**'
-      - '!**.md'
-  # pull_request:
-  #   paths-ignore:
-  #     - '**.md'
+  # push:
+  #   branches:
+  #     - master
   # Dispatch or Manual triggers
   workflow_dispatch:
 
